@@ -1,0 +1,213 @@
+<em><!DOCTYPE html>
+<html>
+  <head>
+    <script src="js/jquery.min.js"></script> <!-- jQuery Core -->
+    <script src="js/main.js"></script>
+    <script src="js/notif.js"></script>
+    <script src="js/qrcode.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <meta charset="UTF-8">
+    <title>UniClip!</title>
+  </head>
+  
+  
+  <body style="-webkit-user-select: none;"  bgcolor = "#009688" onLoad="initialize()">
+  <!--style="-webkit-user-select: none;"-->
+        <!--set buttons non draggable https://github.com/atom/electron/blob/master/docs/api/frameless-window.md-->
+  
+    <center><div><img src="img\app.png" height="56px" style="margin-bottom: 20px;"></a><br></div></center>
+    
+    <!-- Menu Div -->
+    <div id="menu_on" class="hidden">
+    <div id="menu_on_right" style="position:absolute; right: 10px; bottom: 5px;">
+    
+    <a btn href="#" id="history" onclick="window.top.close(); return false"><img src="img\history.png"  height="40px"></a>
+    
+    <a btn href="#" id="help" onclick="window.top.close(); return false"><img src="img\help.png"  height="40px"></a>
+    
+    <a btn href="#" id="user"><img src="img\user.png"  height="40px"></a>
+    
+    </div>
+    
+    <div id="menu_on_left" style="position:absolute; bottom: 5px;">
+    
+    <a btn href="#" id="back" onclick=""><img src="img\back.png"  height="40px" style="left: 10px;"></a>
+    </div>
+    </div>
+    
+    
+    
+    
+    <div id="menu_off">
+    <div style="position:absolute; right: 10px; bottom: 5px;">
+    
+    <a btn href="#" id="close" onclick="window.top.close(); return false"><img src="img\close_x.png"  height="40px"></a>
+    </div>
+    
+    <div style="position:absolute; bottom: 5px;">
+    
+    <a btn id="menu" class="hidden" onclick=""><img src="img\menu.png"  height="40px" style="left: 10px;"></a>
+    </div>
+    </div>
+    
+    
+   <!-- Main content-->
+    <div id="container">
+    <div id="form">
+    
+    <!--Waiting-->
+    <center>
+    <div id="ui_waiting">
+	<br><br><br><br>
+    <center><span class="bold">Please wait</span><br><span class="faint">Generating session token</span></center><br>
+	</div>
+ 	</center>
+    
+    <!--Login Form-->
+    <center>
+    <div id="ui_login">
+
+    <center>To begin, scan the QR code below using UniClip app on your mobile device. </center><br>
+    <div id="qrcode" style="width:120px; height:120px; margin-top:15px;"></div>
+	<br><br>
+    
+	<button class="button" id="b_howtoscan">How to scan the code</button>
+	</div>
+ 	</center>
+    
+<!--Running-->
+<div id="ui_running" class="hidden">
+<div style="align-content: left; margin-left:00px; text-align:justify" class="box">
+<font class="" style="font-weight:1400;">The UniClip service is running.<br><br>To make things easy and fast, UniClip is fully operable using keyboard combinations. Go ahead and click on one of the following actions.</font>
+</div><br>
+
+	<button class="button" style="margin-bottom:8px; margin-left: 10px;" id="b_globalkeyshortcuts_from_running">See Keyboard Shortcuts</button><br>
+    <!--<button class="button" style="margin-bottom:8px;; margin-left: 20px;" id="b_unregister">Unregister this device</button><br>-->
+    <button class="button" style="margin-bottom:8px;; margin-left: 10px;" id="b_help">Help</button>
+
+</div>
+<br>
+    
+
+</div>
+
+
+<!--How to scan-->
+<div id="ui_howtoscan" class="hidden pages">
+<div class="pages_content">	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="black">
+<font class="accent bold" style="font-weight:1400;">How to scan?</font>
+<br>
+	1. To scan, click on the icon on your mobile device which looks something like: 
+    <br>
+    <center><img src="img/howtoscan.png" width="60px" height="60px"></center>
+    <br>
+    2. And then on the next screen, you can scan the QR code.
+    <br>
+    3. The mobile app will authenticate your desktop automatically. After this point, press <span class="accent">Ctrl + Shift + U </span>to hide UniClip desktop app.
+	<br><br>
+    
+	<center><p>
+	<button class="button" id="b_globalkeyshortcuts_from_howtoscan">See Keyboard Shortcuts</button>&nbsp;&nbsp;&nbsp;
+    <button class="button" id="b_close_howtoscan">Got It</button></p></center>
+    
+</span>
+</div>
+</div>
+
+
+<!--Global Key  Shortcuts-->
+<div id="ui_globalkeyshortcuts" class="hidden pages">
+<div class="pages_content">	
+	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="accent">
+<font class="accent bold" style="font-weight:1400;">Keyboard Shortcuts</font>
+<br>
+    1. Ctrl + Shift + C : <span class="black">Send clipboard to other devices.</span><br>
+    2. Ctrl + Shift + V : <span class="black">Get clipboard from the cloud.</span><br>
+    3. Ctrl + Shift + U : <span class="black">Show/hide UniClip.</span><br>
+    4. Ctrl + Shift + Q : <span class="black">Quit UniClip.</span><br><br>
+    
+    Note:<br>
+    <span class="black">Show/hide UniClip minimizes the application to the system tray. Hence, the service will run in the background and monitor changes to the cloudboard.</span>
+
+<br><br>    
+<center><p>
+<button class="button" id="b_close_globalkeyshortcuts">Got It</button></p></center>
+    
+</span>
+</div>
+</div>
+
+
+
+<!--Help-->
+<div id="ui_help" class="hidden pages">
+<div class="pages_content">	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="black">
+<font class="accent bold" style="font-weight:1400;">Help</font>
+<br>
+	<font class="accent" style="font-weight:1400;">What's UniClip?</font><br>
+	UniClip is a cross-platform clipboard synchronizartion tool. In simpler words, it lets lets you copy any text on a device and lets you paste it on another. A simple, yet much needed tool. 
+    <br>
+    <br>
+	<!--<font class="accent" style="font-weight:1400;">Is UniClip secure?</font><br>
+	Yup. UniClip uses Firebase as its backbone technology. I think its pretty secure. However, I would suggest sharing sensitive information via UnClip.
+    <br>-->
+	<font class="accent" style="font-weight:1400;">What about keyboard shortcuts?</font><br>
+	UniClip's keyboard shortcuts are global. So, you can update clipboards and sync them, no matter which other window you are on.
+
+	<br><br>
+    
+	<center><p>
+	<button class="button" id="b_globalkeyshortcuts_from_help">See Keyboard Shortcuts</button>&nbsp;&nbsp;&nbsp;
+    <button class="button" id="b_close_help">Sweet!</button></p></center>
+    
+</span>
+</div>
+</div>
+
+
+<!-- -->
+</div>
+</div>
+
+<button class="button update_button" id="update_button">Update available.</button>
+<div class="popup" id="ui_popup"><center><div id="popup_content" class="popup_content"></div></center></div>
+
+    
+<script type="text/javascript">
+
+function initialize(){
+			// Send IPC
+	 		var remote = require('electron').remote;
+			var authenticated = "?";
+			
+			remote.getGlobal('authentication_status').authenticated = authenticated; 
+  
+    		var ipcRenderer = require('electron').ipcRenderer;   
+      		ipcRenderer.send('auth_status');
+	 
+			ipcRenderer.on('auth_status', function(event, arg) {
+		 	if(arg==2){
+				//Already autheticated, make UI changes
+				onAuthorized();
+			 }
+			 else{
+				 onNotAuthorized();
+			 }
+			});	
+}
+
+
+
+</script>
+        
+<script type="text/javascript" src="js/scripts.js">
+</script>
+
+</body>
+</html>

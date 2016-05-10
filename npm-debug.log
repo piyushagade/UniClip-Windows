@@ -1,0 +1,28 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'start' ]
+2 info using npm@1.4.28
+3 info using node@v4.2.1
+4 verbose run-script [ 'prestart', 'start', 'poststart' ]
+5 info prestart electron-quick-start@1.0.0
+6 info start electron-quick-start@1.0.0
+7 verbose unsafe-perm in lifecycle true
+8 info electron-quick-start@1.0.0 Failed to exec start script
+9 error electron-quick-start@1.0.0 start: `electron main.js`
+9 error Exit status 3221225477
+10 error Failed at the electron-quick-start@1.0.0 start script.
+10 error This is most likely a problem with the electron-quick-start package,
+10 error not with npm itself.
+10 error Tell the author that this fails on your system:
+10 error     electron main.js
+10 error You can get their info via:
+10 error     npm owner ls electron-quick-start
+10 error There is likely additional logging output above.
+11 error System Windows_NT 10.0.10586
+12 error command "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "start"
+13 error cwd C:\Users\Piyush Agade\Workspaces\Misc\Elektron\Restore\UniClip
+14 error node -v v4.2.1
+15 error npm -v 1.4.28
+16 error code ELIFECYCLE
+17 verbose exit [ 1, true ]

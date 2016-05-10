@@ -1,0 +1,137 @@
+<em><!DOCTYPE html>
+<html>
+  <head>
+    <script src="js/jquery.min.js"></script> <!-- jQuery Core -->
+    <script src="js/main.js"></script>
+    <script src="js/notif.js"></script>
+    <script src="js/qrcode.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <meta charset="UTF-8">
+    <title>UniClip!</title>
+  </head>
+  
+  
+  <body  bgcolor = "#009688" onLoad="initialize()">
+  <!--style="-webkit-user-select: none;"-->
+        <!--set buttons non draggable https://github.com/atom/electron/blob/master/docs/api/frameless-window.md-->
+  
+    <center><div><img src="img\app.png" height="56px"></a><br></div></center>
+    
+    <!-- Menu Div -->
+    <div id="menu_on" class="hidden">
+    <div id="menu_on_right" style="position:absolute; right: 10px; bottom: 5px;">
+    
+    <a btn href="#" id="history" onclick="window.top.close(); return false"><img src="img\history.png"  height="40px"></a>
+    
+    <a btn href="#" id="help" onclick="window.top.close(); return false"><img src="img\help.png"  height="40px"></a>
+    
+    <a btn href="#" id="user"><img src="img\user.png"  height="40px"></a>
+    
+    </div>
+    
+    <div id="menu_on_left" style="position:absolute; bottom: 5px;">
+    
+    <a btn href="#" id="back" onclick=""><img src="img\back.png"  height="40px" style="left: 10px;"></a>
+    </div>
+    </div>
+    
+    
+    
+    
+    <div id="menu_off">
+    <div style="position:absolute; right: 10px; bottom: 5px;">
+    
+    <a btn href="#" id="close" onclick="window.top.close(); return false"><img src="img\close_x.png"  height="40px"></a>
+    </div>
+    
+    <div style="position:absolute; bottom: 5px;">
+    
+    <a btn id="menu" onclick=""><img src="img\menu.png"  height="40px" style="left: 10px;"></a>
+    </div>
+    </div>
+    
+    
+   <!-- Main content-->
+    <div id="container" class="box">
+    <div id="form">
+    <center><br>
+
+	<!--Waiting-->
+    <div id="ui_waiting" class="hidden">
+
+    <center>
+    <br><br><br><br> Please wait while we generate a session token. </center><br>
+    
+
+	</div>
+
+
+    <!--Login Form-->
+    <div id="ui_device_form">
+
+    <center>To begin, scan the QR code below using UniClip app on your mobile device. </center><br>
+    <div id="qrcode" style="width:120px; height:120px; margin-top:15px;"></div>
+	<br><br>
+    
+	<button class="button">How to scan the code</button>
+	</div>
+
+    
+ </center>
+<!--Running-->
+<div id="ui_running" class="hidden">
+	
+     <span style="align-content: left; margin-left:00px; font-size:16px;" class="accent bold">Global keyboard shortcuts: <br>
+    1. <b>Ctrl + Shift + C</b> : <span class="faint">Send clipboard to other devices.</span><br>
+    2. <b>Ctrl + Shift + V</b> : <span class="faint">Get clipboard from the cloud.</span><br>
+    3. <b>Ctrl + Shift + U</b> : <span class="faint">Show/hide UniClip.</span><br>
+    4. <b>Ctrl + Shift + Q</b> : <span class="faint">Quit UniClip.</span><br><br>
+
+</span>
+<span style="align-content: left; margin-left:00px; font-size:16px;" class="accent bold">Latest clip: <br>   
+
+<div id="latest_clip" class="hidden"></div>
+
+</span>
+<br>
+    
+
+</div
+</div>
+</div>
+
+<div class="popup" id="ui_popup"></div>
+
+    
+<script type="text/javascript">
+
+function initialize(){
+			// Send IPC
+	 		var remote = require('electron').remote;
+			var authenticated = "?";
+			
+			remote.getGlobal('authentication_status').authenticated = authenticated; 
+  
+    		var ipcRenderer = require('electron').ipcRenderer;   
+      		ipcRenderer.send('auth_status');
+	 
+			ipcRenderer.on('auth_status', function(event, arg) {
+		 	if(arg==2){
+				//Already autheticated, make UI changes
+				onAuthorized();
+			 }	
+			});	
+}
+
+
+
+</script>
+        
+<script type="text/javascript" src="js/scripts.js">
+</script>
+
+</body>
+</html>
