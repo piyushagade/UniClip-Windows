@@ -1,30 +1,69 @@
-# electron-quick-start
 
-**Clone and run for a quick way to see an Electron in action.**
+UniClip for Windows/Mac/Linux
+=======================
 
-This is a minimal Electron application based on the [Quick Start Guide](http://electron.atom.io/docs/latest/tutorial/quick-start) within the Electron documentation.
+UniClip is an cross-device clipboard synchronization application. 
 
-A basic Electron application needs just these files:
 
-- `package.json` - Points to the app's main file and lists its details and dependencies.
-- `main.js` - Starts the app and creates a browser window to render HTML. This is the app's **main process**.
-- `index.html` - A web page to render. This is the app's **renderer process**.
+Play Store
+----
+The app is available on Google Play:
 
-You can learn more about each of these components within the [Quick Start Guide](http://electron.atom.io/docs/latest/tutorial/quick-start).
+<a href="https://play.google.com/store/apps/details?id=com.piyushagade.uniclip">
+	<img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="60" />
+</a>
 
-## To Use
+Screenshots
+-----------
 
-To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+| Authentication Page | Service running |
+|:-:|:-:|
+| ![Authentication Page][1] | ![Service running][3] |
+| [Authentication Page] | [_Service running_] |
 
-```bash
-# Clone this repository
-git clone https://github.com/electron/electron-quick-start
-# Go into the repository
-cd electron-quick-start
-# Install dependencies and run the app
-npm install && npm start
-```
 
-Learn more about Electron and its API in the [documentation](http://electron.atom.io/docs/latest).
+| Keyboard Shortcuts | How to scan page |
+|:-:|:-:|
+| ![Keyboard Shortcuts][4] | ![How to scan page][2] |
+| [_Keyboard Shortcuts_] | [_How to scan page_] |
 
-#### License [CC0 (Public Domain)](LICENSE.md)
+
+What It Does
+-----
+
+**1:** UniClip syncs clipboards on all registered devices that are currently listening the cloudboard.
+
+**2:** UniClip also lets users share clipboards with their friends.
+
+Cloudboard
+-------
+The cloudboard is the clipboard on cloud. Each username has its own cloudboard through which the user's devices could unify their clipboards. The cloudboard is implemeted on the Firebase.
+
+Changes
+-------
+
+* **Version 1.0:**
+    * Bug fixes
+    * IntroActivity on first run
+    * Added menu drawer
+    * Added Clipboard history
+* **Version 1.1:**
+    * Added Notification, Vibrate control
+    * Added Light/Dark theme
+
+Open source libraries
+-------
+
+*UniClip!* uses the following open source files:
+
+* [Material Intro][7] by [@HeinrichReimer][6]
+
+
+[7]: https://github.com/piyushagade/material-intro
+[6]: https://github.com/HeinrichReimer
+
+[1]: http://i.imgur.com/8uZfOXx.png
+[2]: http://i.imgur.com/QNG7YlG.png
+[3]: http://i.imgur.com/f0z2Jpn.png
+[4]: http://i.imgur.com/ltiS1oe.png
+[5]: http://i.imgur.com/StS7Vtl.png

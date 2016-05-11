@@ -14,10 +14,11 @@
   </head>
   
   
-  <body style="-webkit-user-select: none;"  bgcolor = "#009688" onLoad="initialize()">
+  <body style="-webkit-user-select: none;" bgcolor="#009688" onLoad="initialize()">
+  <div class="background"></div>
   <!--style="-webkit-user-select: none;"-->
         <!--set buttons non draggable https://github.com/atom/electron/blob/master/docs/api/frameless-window.md-->
-  
+  <div class="foreground">
     <center><div><img src="img\app.png" height="56px" style="margin-bottom: 20px;"></a><br></div></center>
     
     <!-- Menu Div -->
@@ -61,37 +62,44 @@
     <!--Waiting-->
     <center>
     <div id="ui_waiting">
-	<br><br><br><br>
+	<br><br><br><br><br>
     <center><span class="bold">Please wait</span><br><span class="faint">Generating session token</span></center><br>
 	</div>
  	</center>
     
-    <!--Login Form-->
-    <center>
-    <div id="ui_login">
+<!--Login Form-->
+<center>
+<div id="ui_login">
 
-    <center>To begin, scan the QR code below using UniClip app on your mobile device. </center><br>
-    <div id="qrcode" style="width:120px; height:120px; margin-top:15px;"></div>
-	<br><br>
+<center><font size="3.2px">Scan the QR code using UniClip app on your mobile device.</font></center><br><br>
+<div id="qrcode" style="width:180px; height:180px; margin-top:15px;"></div>
+<br>
     
-	<button class="button" id="b_howtoscan">How to scan the code</button>
-	</div>
- 	</center>
+<button class="button" style="margin-bottom:8px;; margin-left: 10px;"  id="b_howtoscan">How to scan the code</button><br>
+<button class="button" style="margin-bottom:8px;; margin-left: 10px;"  id="b_android">Get Android app</button>
+</div>
+</center>
     
 <!--Running-->
 <div id="ui_running" class="hidden">
-<div style="align-content: left; margin-left:00px; text-align:justify" class="box">
-<font class="" style="font-weight:1400;">The UniClip service is running.<br><br>To make things easy and fast, UniClip is fully operable using keyboard combinations. Go ahead and click on one of the following actions.</font>
+<div style="align-content: center; margin-left:00px; text-align:justify" class="box">
+<center><font class="" style="font-weight:1400;">The UniClip service is running. To make things easy and fast, UniClip can be fully operated using keyboard combinations. Go ahead and click on one of the following actions.</font></center>
 </div><br>
 
-	<button class="button" style="margin-bottom:8px; margin-left: 10px;" id="b_globalkeyshortcuts_from_running">See Keyboard Shortcuts</button><br>
-    <!--<button class="button" style="margin-bottom:8px;; margin-left: 20px;" id="b_unregister">Unregister this device</button><br>-->
+	<button class="button" style="margin-bottom:8px; margin-left: 10px;" id="b_globalkeyshortcuts_from_running">Keyboard Shortcuts</button><br>
+	<button class="button" style="margin-bottom:8px; margin-left: 10px;" id="b_preferences">Preferences</button><br>
+    <button class="button" style="margin-bottom:8px;; margin-left: 10px;" id="b_unregister">Unregister and Quit</button><br>
+    <button class="button" style="margin-bottom:8px;; margin-left: 10px;" id="b_about">About</button><br>
     <button class="button" style="margin-bottom:8px;; margin-left: 10px;" id="b_help">Help</button>
 
 </div>
-<br>
-    
+</div>
 
+    
+<!--LoggedOut-->
+<div id="ui_logged_out" class="hidden">
+<br><br><br><br><br>
+    <center><span class="bold">Successfully logged out.</span><br><span class="faint">The app will close in 4 secs.</span></center><br>
 </div>
 
 
@@ -111,8 +119,43 @@
 	<br><br>
     
 	<center><p>
-	<button class="button" id="b_globalkeyshortcuts_from_howtoscan">See Keyboard Shortcuts</button>&nbsp;&nbsp;&nbsp;
+	<button class="button" id="b_globalkeyshortcuts_from_howtoscan">Keyboard Shortcuts</button>&nbsp;&nbsp;&nbsp;
     <button class="button" id="b_close_howtoscan">Got It</button></p></center>
+    
+</span>
+</div>
+</div>
+
+
+<!--Android app-->
+<div id="ui_android" class="hidden pages">
+<div class="pages_content">	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="black">
+<font class="accent bold" style="font-weight:1400;">Android app</font>
+<br>
+	1. To download the UniClip android app, scan the QR code on your android device. 
+    <br><br>
+    <center><img src="img/androidQR.png" width="140px" height="140px"></center><br><br>
+    <center><button class="button" id="b_close_android">Done</button></p></center>
+    
+</span>
+</div>
+</div>
+
+
+
+<!--About-->
+<div id="ui_about" class="hidden pages">
+<div class="pages_content">	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="black">
+<font class="accent bold" style="font-weight:1400;">About UniClip</font>
+<br>
+	1. UniClip is a cross-platform clipboard synchronization tool. Currently, only supporting Android and Windows PC, however, applications for Mac and Linux are under-development.<br><br>
+    2. Any suggestions and contributions (I don't mean money) are welcomed. Please email me at <font class="accent">piyushagade@gmail.com</font>.<br><br>
+    3. If any of you is wondering, I am Piyush Agade. I am a Computer science graduate student at Univeristy of Florida (at the time of release of this app). 
+    <br><br>
+    
+    <center> <button class="button" id="b_close_about">Okay</button></p></center>
     
 </span>
 </div>
@@ -163,12 +206,39 @@
 	<br><br>
     
 	<center><p>
-	<button class="button" id="b_globalkeyshortcuts_from_help">See Keyboard Shortcuts</button>&nbsp;&nbsp;&nbsp;
+	<button class="button" id="b_globalkeyshortcuts_from_help">Keyboard Shortcuts</button>&nbsp;&nbsp;&nbsp;
     <button class="button" id="b_close_help">Sweet!</button></p></center>
     
 </span>
 </div>
 </div>
+
+
+
+
+
+<!--Preferences-->
+<div id="ui_preferences" class="hidden pages">
+<div class="pages_content">	
+	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="accent">
+<font class="accent bold" style="font-weight:1400;">Preferences</font>
+<br>
+    <label class="accent">Enable UniClip service<input type="checkbox" id="autostart"/></label>
+    <span class="black">If enabled, UniClip will sync clipboard of this device.</span><br><br>
+    <label class="accent">Start minimized<input type="checkbox" id="minimized"/></label>
+    <span class="black">If enabled, UniClip will starts minimized to the tray.</span><br><br>
+    <label class="accent">Show notifications<input type="checkbox" id="notifications"/></label>
+    <span class="black">If enabled, you will be notified of UniClip's events.</span><br><br>
+    
+<br>
+<center><p>
+<button class="button" id="b_close_preferences" onClick="onPrefChange()">Save</button></p></center>
+    
+</span>
+</div>
+</div>
+
 
 
 <!-- -->
@@ -178,28 +248,29 @@
 <button class="button update_button" id="update_button">Update available.</button>
 <div class="popup" id="ui_popup"><center><div id="popup_content" class="popup_content"></div></center></div>
 
+</div>
     
 <script type="text/javascript">
 
 function initialize(){
-			// Send IPC
-	 		var remote = require('electron').remote;
-			var authenticated = "?";
+		// Send IPC
+	 	var remote = require('electron').remote;
+		var authenticated = "?";
 			
-			remote.getGlobal('authentication_status').authenticated = authenticated; 
-  
-    		var ipcRenderer = require('electron').ipcRenderer;   
-      		ipcRenderer.send('auth_status');
+		remote.getGlobal('authentication_status').authenticated = authenticated; 
+ 
+    	var ipcRenderer = require('electron').ipcRenderer;   
+      	ipcRenderer.send('auth_status');
 	 
-			ipcRenderer.on('auth_status', function(event, arg) {
-		 	if(arg==2){
+		ipcRenderer.on('auth_status', function(event, arg) {
+			if(arg==2){
 				//Already autheticated, make UI changes
 				onAuthorized();
-			 }
-			 else{
-				 onNotAuthorized();
-			 }
-			});	
+			}
+			else{
+				onNotAuthorized();
+			}
+		});	
 }
 
 

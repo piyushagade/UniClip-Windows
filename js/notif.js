@@ -1,4 +1,5 @@
-var version = '1.0.1';
+var version = '1.1';
+
 var update_available = false;
 
 $(window).load(function(){
@@ -20,6 +21,11 @@ var options = [
   {
     title: " update available",
     body: "Open update page in UniClip desktop app.",
+    icon: path.join(__dirname+'/img/', 'ic_launcher.png')
+  },
+  {
+    title: "UniClip running in background",
+    body: "Press Ctrl + Shift + U to show UniClip.",
     icon: path.join(__dirname+'/img/', 'ic_launcher.png')
   }
 ]
@@ -51,6 +57,11 @@ function doUpdateNotify(ver) {
         new Notification("Version " + ver + options[1].title, options[1]);
 }
 
+function doMinimizedNotify() {
+	alert();
+        new Notification(options[2].title, options[2]);
+}
+
 function showUpdateButton(ver){
 	$("#update_button").fadeIn(200);
 	$("#update_button").text(ver + " version is here.");
@@ -58,9 +69,6 @@ function showUpdateButton(ver){
 
 
 
-
-	//fb_devices.onDisconnect().update({'HP': '0'});
-	//fb_devices.update({'HP': '1'});
 
 var prev_clip = '';
 
@@ -87,3 +95,54 @@ fb_data.on("value", function(snapshot) {
 //    window.hide();
 
 });
+
+
+var path = require('path');
+var options = [
+  {
+    title: "New clip available",
+    body: "Press Ctrl + Shift + V to copy to your clipboard."
+  },
+  {
+    title: " update available",
+    body: "Open update page in UniClip desktop app.",
+    icon: path.join(__dirname+'/img/', 'ic_launcher.png')
+  },
+  {
+    title: "UniClip running in background",
+    body: "Press Ctrl + Shift + U to show UniClip.",
+    icon: path.join(__dirname+'/img/', 'ic_launcher.png')
+  }
+]
+
+//Notify if Update available
+fb_update.on("value", function(snapshot) {
+  		var data = snapshot.val();
+		if(parseFloat(data)>parseFloat(version)) {
+			//Update Available
+			update_available = true;
+			doUpdateNotify(data);
+			
+			showUpdateButton(data);
+		}
+		
+		}, function (errorObject) {
+  		console.log("The read failed: " + errorObject.code);
+		
+});
+
+
+
+
+function doNotify() {
+    new Notification(options[0].title, options[0]);
+}
+
+function doUpdateNotify(ver) {
+        new Notification("Version " + ver + options[1].title, options[1]);
+}
+
+function doMinimizedNotify() {
+	alert();
+        new Notification(options[2].title, options[2]);
+}
