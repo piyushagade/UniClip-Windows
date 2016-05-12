@@ -8,6 +8,7 @@ $('#ui_popup').fadeOut(0);
 $('#ui_login').fadeOut(0);
 $('#ui_logged_out').fadeOut(0);
 $('#update_button').fadeOut(0);
+$('#sync').fadeOut(0);
 
 
 $('#ui_waiting').fadeIn(200);
@@ -43,6 +44,8 @@ function onNotAuthorized(){
 }
 	
 function onAuthorized(){
+  
+	
 	isAuthorized = true;
 	showPopup("Authentication succeeded.");
 	$('#ui_login').fadeOut(0);
@@ -58,8 +61,8 @@ function onAuthorized(){
 		$('#ui_running').removeClass('hidden');
 		$('#ui_running').fadeOut(0);
 		$('#ui_running').fadeIn(600);
+		$('#sync').fadeIn(600);
 	}, 2600);
-	
 }
 
 function showPopup(mess){
@@ -341,6 +344,7 @@ $('#b_close_android').click(function (e) {
 
 $('#b_unregister').click(function (e) {
 	logout();
+	$('#sync').fadeOut(600);
 });
 
 function logout(){
@@ -416,6 +420,23 @@ function onPrefChange(){
 		if(arg==1) showPopup('Preferences updated');
 	 });
 
+}
+
+function window_close(){
+	
+	setTimeout(function() {	
+     var ipcRenderer = require('electron').ipcRenderer;
+	 ipcRenderer.send('closeWindow');
+	 
+	 // Send IPC
+	 var remote = require('electron').remote;
+
+	 hideAll();
+	 ipcRenderer.on('closeWindow', function(event, arg) {
+	 });
+	
+	 window.top.close();
+	}, 800);
 }
 
 

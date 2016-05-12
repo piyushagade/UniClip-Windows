@@ -1,0 +1,3 @@
+electron-packager UniClip UniClip --platform=win32 --arch=x64 --overwrite --icon=/img/ic_launcher.ico --ignore=dist
+
+electron-packager UniClip UniClip --platform=darwin --arch=x64 --overwrite --icon=/img/ic_launcher.ico --ignore=dist

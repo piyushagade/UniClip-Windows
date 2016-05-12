@@ -16,6 +16,8 @@
   
   <body style="-webkit-user-select: none;" bgcolor="#009688" onLoad="initialize()">
   <div class="background"></div>
+  <div ><img id="sync" src="img/sync.png" width="120" height="120" class="rotate"></div>
+  
   <!--style="-webkit-user-select: none;"-->
         <!--set buttons non draggable https://github.com/atom/electron/blob/master/docs/api/frameless-window.md-->
   <div class="foreground">
@@ -45,7 +47,7 @@
     <div id="menu_off">
     <div style="position:absolute; right: 10px; bottom: 5px;">
     
-    <a btn href="#" id="close" onclick="window.top.close(); return false"><img src="img\close_x.png"  height="40px"></a>
+    <a btn href="#" id="close_window" onclick="window_close()"><img src="img\close_x.png"  height="40px"></a>
     </div>
     
     <div style="position:absolute; bottom: 5px;">
