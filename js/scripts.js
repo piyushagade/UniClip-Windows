@@ -9,6 +9,7 @@ $('#ui_login').fadeOut(0);
 $('#ui_logged_out').fadeOut(0);
 $('#update_button').fadeOut(0);
 $('#sync').fadeOut(0);
+$('#tip').fadeOut(0);
 
 
 $('#ui_waiting').fadeIn(200);
@@ -62,7 +63,36 @@ function onAuthorized(){
 		$('#ui_running').fadeOut(0);
 		$('#ui_running').fadeIn(600);
 		$('#sync').fadeIn(600);
+		
+		
+		showTip();
+	
 	}, 2600);
+}
+
+function showTip(){
+		setTimeout(function() {
+			$('#update_button').fadeOut(200);	
+			$('#tip').fadeIn(400);
+			
+			setTimeout(function() {	
+				$('#tip').fadeOut(200);
+				
+					
+					setTimeout(function() {	
+						$('#update_button').fadeOut(200);	
+						$('#tip').fadeIn(400);
+					
+						setTimeout(function() {	
+							showTip();
+					
+						}, 6000);
+					
+					}, 3000);
+			
+			}, 6000);
+			
+		}, 3000);
 }
 
 function showPopup(mess){

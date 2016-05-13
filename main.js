@@ -352,17 +352,19 @@ ipcMain.on('validate', function(event) {
 
 notifyForAuthorization();
 
+
+
 function notifyForAuthorization(){
   //Get device ID
   storage.get('auth', function(error, data) {
 
-  //Desktop removes from devices after application closes
-  var fb_user = fb.child(data.user_email);
-  var fb_reauthorization = fb_user.child("reauthorization");
-  fb_reauthorization.set(1);
+  //Set reauth request
+  if(data.user_email !== null && !authenticated) {
+    var fb_user = fb.child(data.user_email);
+    var fb_reauthorization = fb_user.child("reauthorization");
+    fb_reauthorization.set(1);
 
-  // if(verbose) console.log("User: "+data.user_email);
-
+  }
       
   });
 
@@ -373,12 +375,12 @@ function resetReauthorization(){
   storage.get('auth', function(error, data) {
 
   //Desktop removes from devices after application closes
-  var fb_user = fb.child(data.user_email);
-  var fb_reauthorization = fb_user.child("reauthorization");
-  fb_reauthorization.set(0);
 
-  
-  if(verbose) console.log("User: "+data.user_email);
+  if(data.user_email !== null) {
+    var fb_user = fb.child(data.user_email);
+    var fb_reauthorization = fb_user.child("reauthorization");
+    fb_reauthorization.set(0);
+  }
   });
 }
 
