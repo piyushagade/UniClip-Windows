@@ -122,9 +122,11 @@ function makeid()
 		
 		//Add device to device list and make it online
 		const fb_cloudboard = new Firebase("https://uniclip.firebaseio.com/cloudboard/");	
-		fb_cloudboard.child(user_email).child("devices").child(text).set(2); 	
-			
-		// Send IPC
+		fb_cloudboard.child(user_email).child("devices").child(text).set(2);
+
+
+
+			// Send IPC
 	 	var remote = require('electron').remote;
 		remote.getGlobal('sharedObj').user_email = user_email; 
 		remote.getGlobal('sharedObj').device_name = text; 

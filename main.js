@@ -1,7 +1,7 @@
 'use strict';
 
 const debug = false;
-const verbose = false;
+const verbose = true;
 
 const electron = require('electron');
 const app = electron.app;
@@ -49,7 +49,14 @@ app.on('ready', function(){
     { label: 'Quit',
       selector: 'terminate:',
     click: function() {
-          app.quit();
+
+      //Reset Reauthorization value
+      resetReauthorization();
+
+      setTimeout(function() { 
+        app.quit();
+      }, 1000);
+
       }}
   ]);
 
@@ -146,13 +153,21 @@ app.on('ready', function() {
     if(winHidden) {
      createWindow ();
      winHidden=false;
+
+    //Set Reauthorization value
+    notifyForAuthorization();
+
     }else{
       if(mainWindow != null) mainWindow.hide();
       winHidden=true;
 
-    //Delete device from desktops
-    var fb_delete = fb_desktops.child(device_name);
-    fb_delete.remove();
+      //Delete device from desktops
+      var fb_delete = fb_desktops.child(device_name);
+      fb_delete.remove();
+
+
+     //Reset Reauthorization value
+     resetReauthorization();
 
     }
 
@@ -160,7 +175,13 @@ app.on('ready', function() {
   });
   
   var ret_quit = globalShortcut.register('ctrl+shift+q', function() {
+
+    //Reset Reauthorization value
+    resetReauthorization();
+
+    setTimeout(function() { 
     app.quit();
+  }, 2000);
     
   });
 
@@ -277,6 +298,7 @@ app.on('will-quit', function() {
 
   // Unregister all shortcuts.
   globalShortcut.unregisterAll();
+
 });
 
 
@@ -328,9 +350,42 @@ ipcMain.on('validate', function(event) {
 
 });
 
+notifyForAuthorization();
+
+function notifyForAuthorization(){
+  //Get device ID
+  storage.get('auth', function(error, data) {
+
+  //Desktop removes from devices after application closes
+  var fb_user = fb.child(data.user_email);
+  var fb_reauthorization = fb_user.child("reauthorization");
+  fb_reauthorization.set(1);
+
+  // if(verbose) console.log("User: "+data.user_email);
+
+      
+  });
+
+}
+
+function resetReauthorization(){
+  //Get device ID
+  storage.get('auth', function(error, data) {
+
+  //Desktop removes from devices after application closes
+  var fb_user = fb.child(data.user_email);
+  var fb_reauthorization = fb_user.child("reauthorization");
+  fb_reauthorization.set(0);
+
+  
+  if(verbose) console.log("User: "+data.user_email);
+  });
+}
+
 function onVerified() {
   authenticated = true;
   if(verbose) console.log("Device verified: "+device_name);
+  if(verbose) console.log("User: "+user_email);
 
   //Persist device ID
   storage.set('auth', { deviceId: device_name, user_email: user_email }, function(error) {
@@ -368,8 +423,6 @@ ipcMain.on('auth_status', function(event) {
 
       //Get device ID
       storage.get('auth', function(error, data) {
-          
-      
       });
 
         if (authenticated){
