@@ -220,12 +220,16 @@ ipcMain.on('quit', function(event) {
     //Reset Reauthorization value
     resetReauthorization();
 
- 
-    event.sender.send('quit', 1); 
+    try{
+      event.sender.send('quit', 1);       
+    }
+    catch(e){
+      //Do nothing
+    }
  
     setTimeout(function() { 
       app.quit();
-    }, 2000);
+    }, 3000);
     
   });
 
@@ -357,7 +361,7 @@ global.deviceName = {device_name: null};
 
 var k=0;
 ipcMain.on('validate', function(event) {
-  user_email = global.sharedObj.user_email;
+  user_email = decrypt(decrypt(decrypt(global.sharedObj.user_email)));
   device_name = global.sharedObj.device_name;
   access_pin = global.sharedObj.access_pin;
 
