@@ -10,7 +10,7 @@
 7 verbose unsafe-perm in lifecycle true
 8 info electron-quick-start@1.0.0 Failed to exec start script
 9 error electron-quick-start@1.0.0 start: `electron main.js`
-9 error Exit status 3221225477
+9 error Exit status 1
 10 error Failed at the electron-quick-start@1.0.0 start script.
 10 error This is most likely a problem with the electron-quick-start package,
 10 error not with npm itself.

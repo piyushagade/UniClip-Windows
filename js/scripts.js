@@ -2,6 +2,12 @@
 $(document).ready(function(){
 
 
+var drag = require('electron-drag');
+var clear = drag('logo_img');
+
+document.querySelector('#logo_img').style['-webkit-app-region'] = 'drag';
+document.querySelector('#move_icon').style['-webkit-app-region'] = 'drag';
+
 $('#ui_waiting').fadeOut(0);
 $('#qrcode').fadeOut(0);
 $('#ui_popup').fadeOut(0);
@@ -455,7 +461,7 @@ function onPrefChange(){
 }
 
 function window_close(){
-	
+	showPopup("Minimizing UniClip to tray.");
 	setTimeout(function() {	
      var ipcRenderer = require('electron').ipcRenderer;
 	 ipcRenderer.send('closeWindow');
@@ -468,7 +474,7 @@ function window_close(){
 	 });
 	
 	 window.top.close();
-	}, 800);
+	}, 1400);
 }
 
 

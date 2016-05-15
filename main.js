@@ -10,6 +10,7 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const storage = require('electron-json-storage');
 
+
 const Menu = electron.Menu;
 const Tray = electron.Tray;
 const globalShortcut = electron.globalShortcut;

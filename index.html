@@ -15,13 +15,15 @@
   
   
   <body style="-webkit-user-select: none;" bgcolor="#009688" onLoad="initialize()">
-  <div class="background"></div>
+  <div class="background" id="background"></div>
   <div ><img id="sync" src="img/sync.png" width="120" height="120" class="rotate"></div>
+  
+  <div class="move" id="move_icon"><img src="img/move.png" alt="Move UniClip!" height="46px"></div>
   
   <!--style="-webkit-user-select: none;"-->
         <!--set buttons non draggable https://github.com/atom/electron/blob/master/docs/api/frameless-window.md-->
-  <div class="foreground">
-    <center><div><img src="img\app.png" height="56px" style="margin-bottom: 20px;"></a><br></div></center>
+  <div class="foreground" id="foreground">
+    <center><div><img src="img\app.png" height="56px" style="margin-bottom: 20px;" id="logo_img"></a><br></div></center>
     
     <!-- Menu Div -->
     <div id="menu_on" class="hidden">
@@ -47,7 +49,7 @@
     <div id="menu_off">
     <div style="position:absolute; right: 10px; bottom: 5px;">
     
-    <a btn href="#" id="close_window" onclick="window_close()"><img src="img\close_x.png"  height="40px"></a>
+    <a btn href="#" id="close_window" onclick="window_close()"><img src="img\close_x.png" alt="Minimize to tray" class="close" height="40px"></a>
     </div>
     
     <div style="position:absolute; bottom: 5px;">
@@ -88,11 +90,11 @@
 <center><font class="" style="font-weight:1400;">The UniClip service is running. To make things easy and fast, UniClip can be fully operated using keyboard combinations. Go ahead and click on one of the following actions.</font></center>
 </div><br>
 
-	<button class="button" style="margin-bottom:8px; margin-left: 10px;" id="b_globalkeyshortcuts_from_running">Keyboard Shortcuts</button><br>
-	<button class="button" style="margin-bottom:8px; margin-left: 10px;" id="b_preferences">Preferences</button><br>
-    <button class="button" style="margin-bottom:8px;; margin-left: 10px;" id="b_unregister">Unregister and Quit</button><br>
-    <button class="button" style="margin-bottom:8px;; margin-left: 10px;" id="b_about">About</button><br>
-    <button class="button" style="margin-bottom:8px;; margin-left: 10px;" id="b_help">Help</button>
+	<button class="button_anim" style="margin-bottom:8px; margin-left: 10px;" id="b_globalkeyshortcuts_from_running">Keyboard Shortcuts</button><br>
+	<button class="button_anim" style="margin-bottom:8px; margin-left: 10px;" id="b_preferences">Preferences</button><br>
+    <button class="button_anim" style="margin-bottom:8px;; margin-left: 10px;" id="b_unregister">Unregister and Quit</button><br>
+    <button class="button_anim" style="margin-bottom:8px;; margin-left: 10px;" id="b_about">About</button><br>
+    <button class="button_anim" style="margin-bottom:8px;; margin-left: 10px;" id="b_help">Help</button>
     
     
 
