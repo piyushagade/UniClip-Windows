@@ -1,7 +1,9 @@
 'use strict';
+var version = 1.1;
 
-const debug = false;
-const verbose = true;
+const debug = false;    //false
+const verbose = false;   //false
+const reset = false;    //false
 
 const electron = require('electron');
 const app = electron.app;
@@ -20,6 +22,7 @@ const clipboard = require('electron').clipboard;
 const fb_module = require("firebase");
 const fb = new Firebase("https://uniclip.firebaseio.com/cloudboard/");
 const fb_desktops = new Firebase("https://uniclip.firebaseio.com/desktops/");
+const fb_update = new Firebase("https://uniclip.firebaseio.com/latest_version");
 
 var fb_user;
 var fb_data;
@@ -43,6 +46,16 @@ var serviceEnabled;
 var winHidden = false;
 var appIcon = null;
 
+if(reset){
+  
+  //reset auth preferences
+  storage.set('auth', { deviceId: null, user_email: null }); 
+
+  //set default preferences
+  storage.set('pref', { autostart: true, minimized: false, notifications: true }); 
+
+}
+
 app.on('ready', function(){
   appIcon = new Tray(__dirname + '/img/ic_launcher.png');
   var contextMenu = Menu.buildFromTemplate([
@@ -59,6 +72,25 @@ app.on('ready', function(){
 
       }}
   ]);
+
+
+//Update listener
+checkUpdate();
+
+function checkUpdate(){
+  //Notify if Update available
+  fb_update.on("value", function(snapshot) {
+    var data = snapshot.val();
+
+    if(parseFloat(data)>parseFloat(version)) {
+      notify('Version ' + data +' is available!', 'Please update UniClip for new features.');
+    }
+    
+    }, function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    
+  });
+}
 
 
 /* Single Instance Check */
@@ -134,8 +166,9 @@ app.on('ready', function() {
 
   var ret_accept = globalShortcut.register('ctrl+shift+c', function() {
     var data = clipboard.readText('text');
-    if(authenticated && serviceEnabled) {
+    data = encrypt(encrypt(encrypt(data)));
 
+    if(authenticated && serviceEnabled) {
       var fb_user = fb.child(user_email);
       fb_user.update({'data': data});
     }
@@ -144,7 +177,7 @@ app.on('ready', function() {
   
   var ret_send = globalShortcut.register('ctrl+shift+v', function() {
     if(authenticated && serviceEnabled) {
-      clipboard.writeText(r_data);  
+      clipboard.writeText(decrypt(decrypt(decrypt(r_data))));  
     }
     
   });
@@ -356,32 +389,41 @@ notifyForAuthorization();
 
 function notifyForAuthorization(){
   //Get device ID
-  storage.get('auth', function(error, data) {
+ storage.get('auth', function(error, data) {
 
-  //Set reauth request
-  if(data.user_email !== null && !authenticated) {
-    var fb_user = fb.child(data.user_email);
-    var fb_reauthorization = fb_user.child("reauthorization");
-    fb_reauthorization.set(1);
+  try {
+    //Set reauth request
+    if(data.user_email !== null && !authenticated) {
+      var fb_user = fb.child(data.user_email);
+      var fb_reauthorization = fb_user.child("reauthorization");
+      fb_reauthorization.set(1);
+    }
 
+  }catch(e){
+    // Do Nothing
   }
       
-  });
+ });
 
 }
 
 function resetReauthorization(){
   //Get device ID
-  storage.get('auth', function(error, data) {
+ storage.get('auth', function(error, data) {
 
   //Desktop removes from devices after application closes
 
-  if(data.user_email !== null) {
-    var fb_user = fb.child(data.user_email);
-    var fb_reauthorization = fb_user.child("reauthorization");
-    fb_reauthorization.set(0);
+  try {
+    if(data.user_email !== null && data.user_email !== '' && data.user_email !== undefined) {
+      var fb_user = fb.child(data.user_email);
+      var fb_reauthorization = fb_user.child("reauthorization");
+      fb_reauthorization.set(0);
+    }
+
+  }catch(e){
+    // Do Nothing
   }
-  });
+ });
 }
 
 function onVerified() {
@@ -525,3 +567,49 @@ ipcMain.on('closeWindow', function(event) {
   if(verbose) console.log("closeWindow op requested");
   winHidden = true;
 });
+
+
+//Encrypt function
+function encrypt(data) {
+        var k = data.length;
+        var m = Math.floor((k + 1)/2);
+
+        var raw = data.split('');
+        var temp = new Array();
+
+        for(var j = 0; j < k; j++){
+            if(j >= 0 && j < m){
+                temp[2*j] = raw[j];
+            }
+            else if(j >= m  && j <= k - 1){
+                if(k % 2 == 0) temp[2*j - k + 1] = raw[j];
+                else temp[2*j - k] = raw[j];
+            }
+        }
+
+        return temp.join("");
+
+
+    }
+
+//Decrypt function
+function decrypt(data){
+        var k = data.length;
+        var m = Math.floor((k + 1)/2);
+
+
+        var raw = data.split("");
+        var temp = new Array();
+
+        for(var j = 0; j < k; j++){
+            if(j >= 0 && j < m){
+                temp[j] = raw[2*j];
+            }
+            else if(j >= m  && j <= k - 1){
+                if(k % 2 == 0) temp[j] = raw[2*j - k + 1];
+                else temp[j] = raw[2*j - k];
+            }
+
+        }
+        return temp.join("");
+    }

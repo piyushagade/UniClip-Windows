@@ -1,4 +1,3 @@
-var version = '1.1';
 
 var update_available = false;
 
@@ -30,7 +29,7 @@ var options = [
   }
 ]
 
-//Notify if Update available
+/*//Notify if Update available
 fb_update.on("value", function(snapshot) {
   		var data = snapshot.val();
 		if(parseFloat(data)>parseFloat(version)) {
@@ -44,7 +43,7 @@ fb_update.on("value", function(snapshot) {
 		}, function (errorObject) {
   		console.log("The read failed: " + errorObject.code);
 		
-});
+});*/
 
 
 
