@@ -17,9 +17,9 @@ const globalShortcut = electron.globalShortcut;
 var ipcMain = require('electron').ipcMain;
 var ipcRenderer = require('electron').ipcRenderer;  
 
-
-
 const clipboard = require('electron').clipboard;
+
+//Firebase variables
 const fb_module = require("firebase");
 const fb = new Firebase("https://uniclip.firebaseio.com/cloudboard/");
 const fb_desktops = new Firebase("https://uniclip.firebaseio.com/desktops/");
@@ -30,7 +30,7 @@ var fb_data;
 var r_data;
 var remote = require('electron').remote;
 
-
+//Preferences variables
 var authenticated = false;
 var user_email;
 var device_name;
@@ -39,7 +39,7 @@ var autostart;
 var notifications;
 var minimized;
 
-var r_data;
+var r_data;   //Clip recieved
 
 var notificationsEnabled;
 var serviceEnabled;
@@ -60,18 +60,21 @@ if(reset){
 app.on('ready', function(){
   appIcon = new Tray(__dirname + '/img/ic_launcher.png');
   var contextMenu = Menu.buildFromTemplate([
-    { label: 'Quit',
+    
+    // { label: 'Enable UniClip!', type: 'checkbox', checked: true  },
+    // { label: 'Autostart', type: 'checkbox', checked: true },
+    { label: 'Unregister and Quit',
       selector: 'terminate:',
-    click: function() {
+      click: function() {
 
-      //Reset Reauthorization value
-      resetReauthorization();
+        //Reset Reauthorization value
+        resetReauthorization();
 
-      setTimeout(function() { 
-        app.quit();
-      }, 1000);
-
-      }}
+        setTimeout(function() { 
+         app.quit();
+        }, 1000);
+      }
+    }
   ]);
 
 
@@ -112,7 +115,7 @@ if(iShouldQuit){
   return;
 }
 
-  
+//Tray Icon and behaviour 
 appIcon.on('click', function handleClick () {
   if(winHidden){
      createWindow();
@@ -123,6 +126,7 @@ appIcon.on('click', function handleClick () {
      winHidden=true;
   }
 });
+
 appIcon.setToolTip('UniClip!');
 appIcon.setContextMenu(contextMenu);
 
@@ -130,11 +134,12 @@ appIcon.setContextMenu(contextMenu);
 
 let mainWindow;
 
-// Create window
+// Create window function
 function createWindow () {
-var var_width = 0;
-if(debug) var_width = var_width + 600;
-var width = 500 + var_width;
+
+  var var_width = 0;
+  if(debug) var_width = var_width + 600;
+  var width = 500 + var_width;
 
   mainWindow = new BrowserWindow({width: width, height: 600, frame: false, 'titleBarStyle': 'hidden', resizable: false, alwaysOnTop: false, fullscreenable: false, skipTaskbar: false, kiosk: false, title: 'UniClip!', icon : 'img/ic_launcher.png', movable: true});
 
@@ -151,7 +156,7 @@ var width = 500 + var_width;
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
-    //app.quit();
+    app.quit();
   }
   winHidden = true;
 });
@@ -165,17 +170,18 @@ app.on('activate', function () {
 //Shortkeys and Clipboard management
 app.on('ready', function() {
 
+  //Ctrl + Shift + C
   var ret_accept = globalShortcut.register('ctrl+shift+c', function() {
     var data = clipboard.readText('text');
     data = encrypt(encrypt(encrypt(data)));
 
     if(authenticated && serviceEnabled) {
-      var fb_user = fb.child(user_email);
+      var fb_user = fb.child(encrypt(encrypt(encrypt(user_email))));
       fb_user.update({'data': data});
     }
   });
 
-  
+  //Ctrl + Shift + V
   var ret_send = globalShortcut.register('ctrl+shift+v', function() {
     if(authenticated && serviceEnabled) {
       clipboard.writeText(decrypt(decrypt(decrypt(r_data))));  
@@ -183,6 +189,7 @@ app.on('ready', function() {
     
   });
 
+  //Ctrl + Shift + U
   var ret_btf = globalShortcut.register('ctrl+shift+u', function() {
     if(winHidden) {
      createWindow ();
@@ -204,24 +211,28 @@ app.on('ready', function() {
      resetReauthorization();
 
     }
-
-
   });
   
+//Ctrl + Shift + Q
+ipcMain.on('quit', function(event) {
   var ret_quit = globalShortcut.register('ctrl+shift+q', function() {
 
     //Reset Reauthorization value
     resetReauthorization();
 
+ 
+    event.sender.send('quit', 1); 
+ 
     setTimeout(function() { 
-    app.quit();
-  }, 2000);
+      app.quit();
+    }, 2000);
     
   });
 
   if (!ret_accept) {
-    console.log('Keyboard shortcuts registration failed. The combinations might be already registerd by some other app.');
+    console.log('Cannot register keyboard shortcuts. The combinations might be already registerd by some other app.');
   }
+});
 });
 
 
@@ -229,7 +240,7 @@ app.on('ready', function() {
 app.on('ready', function() {
   //get preferences
   storage.get('pref', function(error, data) {
-    //if first run
+    //if first run (pref not set before)
     if(data.autostart == null && data.minimized == null && data.notifications == null){
       //set default preferences
       storage.set('pref', { autostart: true, minimized: false, notifications: true }); 
@@ -351,14 +362,14 @@ ipcMain.on('validate', function(event) {
   access_pin = global.sharedObj.access_pin;
 
   
-  fb_user = fb.child(user_email);
+  fb_user = fb.child(encrypt(encrypt(encrypt(user_email))));
   fb_data = fb_user.child("data");
   
   var fb_pin;
   var snapshot;
 
   //Check if username exists
-  var this_user = fb.child(user_email);
+  var this_user = fb.child(encrypt(encrypt(encrypt(user_email))));
   var key_node = this_user.child('key');
   
 
@@ -395,7 +406,7 @@ function notifyForAuthorization(){
   try {
     //Set reauth request
     if(data.user_email !== null && !authenticated) {
-      var fb_user = fb.child(data.user_email);
+      var fb_user = fb.child(encrypt(encrypt(encrypt(data.user_email))));
       var fb_reauthorization = fb_user.child("reauthorization");
       fb_reauthorization.set(1);
     }
@@ -416,7 +427,7 @@ function resetReauthorization(){
 
   try {
     if(data.user_email !== null && data.user_email !== '' && data.user_email !== undefined) {
-      var fb_user = fb.child(data.user_email);
+      var fb_user = fb.child(encrypt(encrypt(encrypt(data.user_email))));
       var fb_reauthorization = fb_user.child("reauthorization");
       fb_reauthorization.set(0);
     }
@@ -440,7 +451,7 @@ function onVerified() {
   });  
 
   //Desktop removes from devices after application closes
-  var fb_user = fb.child(user_email);
+  var fb_user = fb.child(encrypt(encrypt(encrypt(user_email))));
   var fb_data = fb_user.child("data");
   var fb_devices = fb_user.child("devices");
   var fb_device = fb_devices.child(device_name);
@@ -614,3 +625,21 @@ function decrypt(data){
         }
         return temp.join("");
     }
+
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/

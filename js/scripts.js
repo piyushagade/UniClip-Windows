@@ -17,6 +17,9 @@ $('#update_button').fadeOut(0);
 $('#sync').fadeOut(0);
 $('#tip').fadeOut(0);
 
+//Listen for quit command from main process
+toQuit();
+
 
 $('#ui_waiting').fadeIn(200);
 
@@ -71,7 +74,9 @@ function onAuthorized(){
 		$('#sync').fadeIn(600);
 		
 		
-		showTip();
+		//showTip();
+  		$('#tip').fadeIn(200);
+  		$('#tip').text('Press Ctrl + Shift + U to hide UniClip. Press again to unhide.');
 	
 	}, 2600);
 }
@@ -395,14 +400,28 @@ function logout(){
 
 	 hideAll();
 	 ipcRenderer.on('logout', function(event, arg) {
-		$('#ui_logged_out').fadeIn(400);
+		if(arg === 1) $('#ui_logged_out').fadeIn(400);
 	 });
 	
-	}, 800);
-	
-	
+	}, 800);	
 }
 
+//Listen for quit command from main process
+function toQuit(){
+	setTimeout(function() {	
+     var ipcRenderer = require('electron').ipcRenderer;
+	 ipcRenderer.send('quit');
+	 
+	 // Send IPC
+	 var remote = require('electron').remote;
+
+	 hideAll();
+	 ipcRenderer.on('quit', function(event, arg) {
+		if(arg === 1) showPopup("Shutting down UniClip.");
+	 });
+	
+	}, 600);
+}
 
 
 
@@ -476,6 +495,40 @@ function window_close(){
 	 window.top.close();
 	}, 1400);
 }
+
+
+
+//Buttons onhover
+$('#close_window').mouseover(function() {
+  $('#tip').fadeIn(400);
+  $('#tip').text('Minimize UniClip!');
+});
+
+$('#close_window').mouseout(function() {
+  $('#tip').fadeOut(800);
+});
+
+
+
+$('#move_icon').mouseover(function() {
+  $('#tip').fadeIn(400);
+  $('#tip').text('Move window by dragging.');
+});
+
+$('#move_icon').mouseout(function() {
+  $('#tip').fadeOut(800);
+});
+
+
+
+$('#qrcode').mouseover(function() {
+  $('#tip').fadeIn(400);
+  $('#tip').text('Scan this QR code using UniClip mobile app.');
+});
+
+$('#qrcode').mouseout(function() {
+  $('#tip').fadeOut(800);
+});
 
 
 

@@ -29,13 +29,3 @@ $(document).ready(function(){
 
   
   });
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
