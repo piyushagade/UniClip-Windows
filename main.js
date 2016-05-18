@@ -167,6 +167,37 @@ app.on('activate', function () {
   }
 });
 
+app.on('ready', function(){
+
+   storage.get('auth', function(error, data) {
+
+  try {
+    //Set reauth request
+    if(data.user_email !== null) {
+      if(verbose) console.log("Bringing UniClip to the front.")
+      var fb_user = fb.child(encrypt(encrypt(encrypt(data.user_email))));
+      var fb_reauthorization = fb_user.child("reauthorization");
+      
+      fb_reauthorization.on("value", function(snapshot) {
+      var reauth_value = snapshot.val();
+      if(reauth_value === "2" && winHidden){     
+        createWindow();
+        winHidden=false;
+      }
+    
+  });
+
+    }
+
+  }catch(e){
+    // Do Nothing
+  }
+      
+ });
+
+
+});
+
 //Shortkeys and Clipboard management
 app.on('ready', function() {
 
