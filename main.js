@@ -122,7 +122,7 @@ appIcon.on('click', function handleClick () {
      winHidden=false;
   }
   else{
-     if(mainWindow !== null) mainWindow.hide();
+     mainWindow.hide();
      winHidden=true;
   }
 });
@@ -143,7 +143,7 @@ function createWindow () {
 
   mainWindow = new BrowserWindow({width: width, height: 600, frame: false, 'titleBarStyle': 'hidden', resizable: false, alwaysOnTop: false, fullscreenable: false, skipTaskbar: false, kiosk: false, title: 'UniClip!', icon : 'img/ic_launcher.png', movable: true});
 
-  mainWindow.loadURL('file://' + __dirname + '/start.html');
+  mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // Open the DevTools.
   if(debug) mainWindow.webContents.openDevTools();

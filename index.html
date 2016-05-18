@@ -1,287 +1,293 @@
-<!DOCTYPE html>
-<html lang="en">
+<em><!DOCTYPE html>
+<html>
+  <head>
+    <script src="js/jquery.min.js"></script> <!-- jQuery Core -->
+    <script src="js/main.js"></script>
+    <script src="js/notif.js"></script>
+    <script src="js/qrcode.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <meta charset="UTF-8">
+    <title>UniClip!</title>
+  </head>
+  
+  
+  <body style="-webkit-user-select: none;" bgcolor="#009688" onLoad="initialize()">
+  <div class="background" id="background"></div>
+  <div ><img id="sync" src="img/sync.png" width="120" height="120" class="rotate"></div>
+  
+  <div class="move" id="move_icon"><img src="img/move.png" alt="Move UniClip!" height="46px"></div>
+  
+  <!--style="-webkit-user-select: none;"-->
+        <!--set buttons non draggable https://github.com/atom/electron/blob/master/docs/api/frameless-window.md-->
+  <div class="foreground" id="foreground">
+    <center><div><img src="img\app.png" height="56px" style="margin-bottom: 20px;" id="logo_img"></a><br></div></center>
+    
+    <!-- Menu Div -->
+    <div id="menu_on" class="hidden">
+    <div id="menu_on_right" style="position:absolute; right: 10px; bottom: 5px;">
+    
+    <a btn href="#" id="history" onclick="window.top.close(); return false"><img src="img\history.png"  height="40px"></a>
+    
+    <a btn href="#" id="help" onclick="window.top.close(); return false"><img src="img\help.png"  height="40px"></a>
+    
+    <a btn href="#" id="user"><img src="img\user.png"  height="40px"></a>
+    
+    </div>
+    
+    <div id="menu_on_left" style="position:absolute; bottom: 5px;">
+    
+    <a btn href="#" id="back" onclick=""><img src="img\back.png"  height="40px" style="left: 10px;"></a>
+    </div>
+    </div>
+    
+    
+    
+    
+    <div id="menu_off">
+    <div style="position:absolute; right: 10px; bottom: 5px;">
+    
+    <a btn href="#" id="close_window" onclick="window_close()"><img src="img\close_x.png" alt="Minimize to tray" class="close" height="40px"></a>
+    </div>
+    
+    <div style="position:absolute; bottom: 5px;">
+    
+    <a btn id="menu" class="hidden" onclick=""><img src="img\menu.png"  height="40px" style="left: 10px;"></a>
+    </div>
+    </div>
+    
+    
+   <!-- Main content-->
+    <div id="container">
+    <div id="form">
+    
+    <!--Waiting-->
+    <center>
+    <div id="ui_waiting">
+	<br><br><br><br><br>
+    <center><span class="bold">Please wait</span><br><span class="faint">Generating session token</span></center><br>
+	</div>
+ 	</center>
+    
+<!--Login Form-->
+<center>
+<div id="ui_login">
 
-<head>
+<center><font size="3.2px">Scan the QR code using UniClip app on your mobile device.</font></center><br><br>
+<a id="qr_code"><div id="qrcode" style="width:180px; height:180px; margin-top:15px;"></div></a>
+<br>
+    
+<button class="button" style="margin-bottom:8px;; margin-left: 10px;"  id="b_howtoscan">How to scan the code</button><br>
+<button class="button" style="margin-bottom:8px;; margin-left: 10px;"  id="b_android">Get Android app</button>
+</div>
+</center>
+    
+<!--Running-->
+<div id="ui_running" class="hidden">
+<div style="align-content: center; margin-left:00px; text-align:justify" class="box">
+<center><font class="" style="font-weight:1400;">The UniClip service is running. To make things easy and fast, UniClip can be fully operated using keyboard combinations. Go ahead and click on one of the following actions.</font></center>
+</div><br>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+	<button class="button_anim" style="margin-bottom:8px; margin-left: 10px;" id="b_globalkeyshortcuts_from_running">Keyboard Shortcuts</button><br>
+	<button class="button_anim" style="margin-bottom:8px; margin-left: 10px;" id="b_preferences">Preferences</button><br>
+    <button class="button_anim" style="margin-bottom:8px;; margin-left: 10px;" id="b_unregister">Unregister and Quit</button><br>
+    <button class="button_anim" style="margin-bottom:8px;; margin-left: 10px;" id="b_about">About</button><br>
+    <button class="button_anim" style="margin-bottom:8px;; margin-left: 10px;" id="b_help">Help</button>
+    
+    
 
-    <title>UniClip Clipboard synchronization</title>
 
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+</div>
+<center>
+    <span id="tip" style="position:absolute; bottom: 10px; left: 20px; opacity: 0.8; font-size:15px;"></span></center>
+</div>
 
-    <!-- Custom Fonts -->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css">
+    
+<!--LoggedOut-->
+<div id="ui_logged_out" class="hidden">
+<br><br><br><br><br>
+    <center><span class="bold">Successfully logged out.</span><br><span class="faint">The app will close in 4 secs.</span></center><br>
+</div>
 
-    <!-- Plugin CSS -->
-    <link rel="stylesheet" href="css/animate.min.css" type="text/css">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/creative.css" type="text/css">
+<!--How to scan-->
+<div id="ui_howtoscan" class="hidden pages">
+<div class="pages_content">	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="black">
+<font class="accent bold" style="font-weight:1400;">How to scan?</font>
+<br>
+	1. To scan, click on the icon on your mobile device which looks something like: 
+    <br>
+    <center><img src="img/howtoscan.png" width="60px" height="60px"></center>
+    <br>
+    2. And then on the next screen, you can scan the QR code.
+    <br>
+    3. The mobile app will authenticate your desktop automatically. After this point, press <span class="accent">Ctrl + Shift + U </span>to hide UniClip desktop app.
+	<br><br>
+    
+	<center><p>
+	<button class="button" id="b_globalkeyshortcuts_from_howtoscan">Keyboard Shortcuts</button>&nbsp;&nbsp;&nbsp;
+    <button class="button" id="b_close_howtoscan">Got It</button></p></center>
+    
+</span>
+</div>
+</div>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 
-</head>
+<!--Android app-->
+<div id="ui_android" class="hidden pages">
+<div class="pages_content">	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="black">
+<font class="accent bold" style="font-weight:1400;">Android app</font>
+<br>
+	1. To download the UniClip android app, scan the QR code on your android device. 
+    <br><br>
+    <center><img src="img/androidQR.png" width="140px" height="140px"></center><br><br>
+    <center><button class="button" id="b_close_android">Done</button></p></center>
+    
+</span>
+</div>
+</div>
 
-<body id="page-top">
 
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand page-scroll" href="#page-top"><img src="img/logo.png" height="32px"></a>
-            </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    
-                    <li>
-                        <a class="page-scroll" href="#page-top">Begin</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#about">About</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#features">Features</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#download">Download</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#contact">Contact</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container-fluid -->
-    </nav>
+<!--About-->
+<div id="ui_about" class="hidden pages">
+<div class="pages_content">	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="black">
+<font class="accent bold" style="font-weight:1400;">About UniClip</font>
+<br>
+	1. UniClip is a cross-platform clipboard synchronization tool. Currently, only supporting Android and Windows PC, however, applications for Mac and Linux are under-development.<br><br>
+    2. Any suggestions and contributions (I don't mean money) are welcomed. Please email me at <font class="accent">piyushagade@gmail.com</font>.<br><br>
+    3. If any of you is wondering, I am Piyush Agade. I am a Computer science graduate student at Univeristy of Florida (at the time of release of this app). 
+    <br><br>
+    
+    <center> <button class="button" id="b_close_about">Okay</button></p></center>
+    
+</span>
+</div>
+</div>
 
-    <header>
-        <div class="header-content">
-            <div class="header-content-inner">
-                <h1><img src="img/circle_logo.png" height="150px"><br><br>A cross-platform clipboard sync tool</h1>
-                <hr>
-                <p>Synchronize clipboards of your devices on the go!</p>
-                <a href="#about" class="btn btn-primary btn-xl page-scroll">Find Out More</a>
-            </div>
-        </div>
-    </header>
 
-    <section class="bg-primary" id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">A much needed productivity tool!</h2>
-                    <hr class="light">
-                    <p class="text-faded">UniClip is a clipboard synchronization and sharing tool. Nothing more, nothing less!<br>You are definitely going to love it.</p>
-                    <!--<a href="#" class="btn btn-default btn-xl">Get Started!</a>-->
-                </div>
-            </div>
-        </div>
-    </section>
+<!--Global Key  Shortcuts-->
+<div id="ui_globalkeyshortcuts" class="hidden pages">
+<div class="pages_content">	
+	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="accent">
+<font class="accent bold" style="font-weight:1400;">Keyboard Shortcuts</font>
+<br>
+    1. Ctrl + Shift + C : <span class="black">Send clipboard to other devices.</span><br>
+    2. Ctrl + Shift + V : <span class="black">Get clipboard from the cloud.</span><br>
+    3. Ctrl + Shift + U : <span class="black">Show/hide UniClip.</span><br>
+    4. Ctrl + Shift + Q : <span class="black">Quit UniClip.</span><br><br>
+    
+    Note:<br>
+    <span class="black">Show/hide UniClip minimizes the application to the system tray. Hence, the service will run in the background and monitor changes to the cloudboard.</span>
 
-    <section id="features">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">Features</h2>
-                    <hr class="primary">
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 text-center">
-                    <div class="service-box">
-                        <i class="fa fa-4x fa-gears wow bounceIn text-primary"></i>
-                        <h3>Full control to users</h3>
-                        <p class="text-muted">Control which devices gets their clipboards synced, notifications, and much more.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 text-center">
-                    <div class="service-box">
-                        <i class="fa fa-4x fa-dashboard wow bounceIn text-primary" data-wow-delay=".1s"></i>
-                        <h3>Superfast</h3>
-                        <p class="text-muted">Clipboards sync before you can even blink an eye! As long as you have a good internet connection.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 text-center">
-                    <div class="service-box">
-                        <i class="fa fa-4x fa-hdd-o wow bounceIn text-primary" data-wow-delay=".2s"></i>
-                        <h3>Ultra-light</h3>
-                        <p class="text-muted">UniClip serving a single purpose, is very easy on ram and space on your device.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 text-center">
-                    <div class="service-box">
-                        <i class="fa fa-4x fa-exchange wow bounceIn text-primary" data-wow-delay=".3s"></i>
-                        <h3>Cross-platform support</h3>
-                        <p class="text-muted">Sync all your devices clipboards no matter what platform they are running!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<br><br>    
+<center><p>
+<button class="button" id="b_close_globalkeyshortcuts">Got It</button></p></center>
+    
+</span>
+</div>
+</div>
 
-    <!--<section class="no-padding" id="features">
-        <div class="container-fluid">
-            <div class="row no-gutter">
-                <div class="col-lg-4 col-sm-6">
-                    <a href="#" class="portfolio-box">
-                        <img src="img/portfolio/1.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Category
-                                </div>
-                                <div class="project-name">
-                                    Project Name
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a href="#" class="portfolio-box">
-                        <img src="img/portfolio/2.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Category
-                                </div>
-                                <div class="project-name">
-                                    Project Name
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a href="#" class="portfolio-box">
-                        <img src="img/portfolio/3.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Category
-                                </div>
-                                <div class="project-name">
-                                    Project Name
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a href="#" class="portfolio-box">
-                        <img src="img/portfolio/4.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Category
-                                </div>
-                                <div class="project-name">
-                                    Project Name
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a href="#" class="portfolio-box">
-                        <img src="img/portfolio/5.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Category
-                                </div>
-                                <div class="project-name">
-                                    Project Name
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a href="#" class="portfolio-box">
-                        <img src="img/portfolio/6.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Category
-                                </div>
-                                <div class="project-name">
-                                    Project Name
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>-->
 
-    <aside class="bg-dark" id="download">
-        <div class="container text-center">
-            <div class="call-to-action">
-                <h2>Get UniClip for free, no adds, no donations, forever!</h2>
-               <p><a href="download/uniclip_setup.exe" class="btn btn-default btn-xl wow tada">Download for Windows</a> &nbsp; &nbsp; &nbsp; &nbsp; <a href="https://play.google.com/store/apps/details?id=com.piyushagade.uniclip" target="new" class="btn btn-default btn-xl wow tada">Download for Android</a></p>
-            </div>
-        </div>
-    </aside>
 
-    <section id="contact">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Feedback & Suggestions</h2>
-                    <hr class="primary">
-                    <p>Have a suggestion or found a bug? Consider send me an email and I will get back to you as soon as possible!</p>
-                </div>
-                <div class="col-lg-4 col-lg-offset-2 text-center">
-                    <i class="fa fa-linkedin-square fa-3x wow bounceIn"></i>
-                    <p><a href="https://www.linkedin.com/in/piyushagade" target="new">LinkedIn profile</a></p>
-                </div>
-                <div class="col-lg-4 text-center">
-                    <i class="fa fa-envelope-o fa-3x wow bounceIn" data-wow-delay=".1s"></i>
-                   <center> <p><a href="mailto:piyushagade@gmail.com">piyushagade@gmail.com</a></p></center>
-                </div>
-            </div>
-        </div>
-    </section>
+<!--Help-->
+<div id="ui_help" class="hidden pages">
+<div class="pages_content">	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="black">
+<font class="accent bold" style="font-weight:1400;">Help</font>
+<br>
+	<font class="accent" style="font-weight:1400;">What's UniClip?</font><br>
+	UniClip is a cross-platform clipboard synchronizartion tool. In simpler words, it lets lets you copy any text on a device and lets you paste it on another. A simple, yet much needed tool. 
+    <br>
+    <br>
+	<!--<font class="accent" style="font-weight:1400;">Is UniClip secure?</font><br>
+	Yup. UniClip uses Firebase as its backbone technology. I think its pretty secure. However, I would suggest sharing sensitive information via UnClip.
+    <br>-->
+	<font class="accent" style="font-weight:1400;">What about keyboard shortcuts?</font><br>
+	UniClip's keyboard shortcuts are global. So, you can update clipboards and sync them, no matter which other window you are on.
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+	<br><br>
+    
+	<center><p>
+	<button class="button" id="b_globalkeyshortcuts_from_help">Keyboard Shortcuts</button>&nbsp;&nbsp;&nbsp;
+    <button class="button" id="b_close_help">Sweet!</button></p></center>
+    
+</span>
+</div>
+</div>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
 
-    <!-- Plugin JavaScript -->
-    <script src="js/jquery.easing.min.js"></script>
-    <script src="js/jquery.fittext.js"></script>
-    <script src="js/wow.min.js"></script>
 
-    <!-- Custom Theme JavaScript -->
-    <script src="js/creative.js"></script>
+
+
+<!--Preferences-->
+<div id="ui_preferences" class="hidden pages">
+<div class="pages_content">	
+	
+<span style="align-content: left; margin-left:00px; font-size:16px; text-align:justify" class="accent">
+<font class="accent bold" style="font-weight:1400;">Preferences</font>
+<br>
+    <label class="accent">Enable UniClip service<input type="checkbox" id="autostart"/></label>
+    <span class="black">If enabled, UniClip will sync clipboard of this device.</span><br><br>
+    <label class="accent">Start minimized<input type="checkbox" id="minimized"/></label>
+    <span class="black">If enabled, UniClip will starts minimized to the tray.</span><br><br>
+    <label class="accent">Show notifications<input type="checkbox" id="notifications"/></label>
+    <span class="black">If enabled, you will be notified of UniClip's events.</span><br><br>
+    
+<br>
+<center><p>
+<button class="button" id="b_close_preferences" onClick="onPrefChange()">Save</button></p></center>
+    
+</span>
+</div>
+</div>
+
+
+
+<!-- -->
+</div>
+</div>
+
+<button class="button update_button" id="update_button">Update available.</button>
+<div class="popup" id="ui_popup"><center><div id="popup_content" class="popup_content"></div></center></div>
+
+</div>
+    
+<script type="text/javascript">
+
+function initialize(){
+		// Send IPC
+	 	var remote = require('electron').remote;
+		var authenticated = "?";
+			
+		remote.getGlobal('authentication_status').authenticated = authenticated; 
+ 
+    	var ipcRenderer = require('electron').ipcRenderer;   
+      	ipcRenderer.send('auth_status');
+	 
+		ipcRenderer.on('auth_status', function(event, arg) {
+			if(arg==2){
+				//Already autheticated, make UI changes
+				onAuthorized();
+			}
+			else{
+				onNotAuthorized();
+			}
+		});	
+}
+
+
+
+</script>
+        
+<script type="text/javascript" src="js/scripts.js">
+</script>
 
 </body>
-
 </html>

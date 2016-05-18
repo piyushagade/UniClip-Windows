@@ -1,28 +1,73 @@
 0 info it worked if it ends with ok
 1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
 1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
-1 verbose cli   'start' ]
+1 verbose cli   'i',
+1 verbose cli   'loadash' ]
 2 info using npm@1.4.28
 3 info using node@v4.2.1
-4 verbose run-script [ 'prestart', 'start', 'poststart' ]
-5 info prestart electron-quick-start@1.0.0
-6 info start electron-quick-start@1.0.0
-7 verbose unsafe-perm in lifecycle true
-8 info electron-quick-start@1.0.0 Failed to exec start script
-9 error electron-quick-start@1.0.0 start: `electron main.js`
-9 error Exit status 1
-10 error Failed at the electron-quick-start@1.0.0 start script.
-10 error This is most likely a problem with the electron-quick-start package,
-10 error not with npm itself.
-10 error Tell the author that this fails on your system:
-10 error     electron main.js
-10 error You can get their info via:
-10 error     npm owner ls electron-quick-start
-10 error There is likely additional logging output above.
-11 error System Windows_NT 10.0.10586
-12 error command "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "start"
-13 error cwd C:\Users\Piyush Agade\Workspaces\Misc\Elektron\Restore\UniClip
-14 error node -v v4.2.1
-15 error npm -v 1.4.28
-16 error code ELIFECYCLE
-17 verbose exit [ 1, true ]
+4 verbose readDependencies using package.json deps
+5 verbose cache add [ 'loadash', null ]
+6 verbose cache add name=undefined spec="loadash" args=["loadash",null]
+7 verbose parsed url Url {
+7 verbose parsed url   protocol: null,
+7 verbose parsed url   slashes: null,
+7 verbose parsed url   auth: null,
+7 verbose parsed url   host: null,
+7 verbose parsed url   port: null,
+7 verbose parsed url   hostname: null,
+7 verbose parsed url   hash: null,
+7 verbose parsed url   search: null,
+7 verbose parsed url   query: null,
+7 verbose parsed url   pathname: 'loadash',
+7 verbose parsed url   path: 'loadash',
+7 verbose parsed url   href: 'loadash' }
+8 silly lockFile e8efc79f-loadash loadash
+9 verbose lock loadash C:\Users\Piyush Agade\AppData\Roaming\npm-cache\e8efc79f-loadash.lock
+10 silly lockFile e8efc79f-loadash loadash
+11 silly lockFile e8efc79f-loadash loadash
+12 verbose addNamed [ 'loadash', '' ]
+13 verbose addNamed [ null, '*' ]
+14 silly lockFile 49b57bea-loadash loadash@
+15 verbose lock loadash@ C:\Users\Piyush Agade\AppData\Roaming\npm-cache\49b57bea-loadash.lock
+16 silly addNameRange { name: 'loadash', range: '*', hasData: false }
+17 verbose request where is /loadash
+18 verbose request registry https://registry.npmjs.org/
+19 verbose request id 1ecb0078c29b1c8a
+20 verbose url raw /loadash
+21 verbose url resolving [ 'https://registry.npmjs.org/', './loadash' ]
+22 verbose url resolved https://registry.npmjs.org/loadash
+23 verbose request where is https://registry.npmjs.org/loadash
+24 info trying registry request attempt 1 at 12:50:06 AM
+25 http GET https://registry.npmjs.org/loadash
+26 http 404 https://registry.npmjs.org/loadash
+27 silly registry.get cb [ 404,
+27 silly registry.get   { 'content-type': 'application/json',
+27 silly registry.get     'cache-control': 'max-age=0',
+27 silly registry.get     'content-length': '2',
+27 silly registry.get     'accept-ranges': 'bytes',
+27 silly registry.get     date: 'Wed, 18 May 2016 04:50:08 GMT',
+27 silly registry.get     via: '1.1 varnish',
+27 silly registry.get     age: '0',
+27 silly registry.get     connection: 'close',
+27 silly registry.get     'x-served-by': 'cache-atl6224-ATL',
+27 silly registry.get     'x-cache': 'MISS',
+27 silly registry.get     'x-cache-hits': '0',
+27 silly registry.get     'x-timer': 'S1463547008.240362,VS0,VE100',
+27 silly registry.get     vary: 'Accept-Encoding' } ]
+28 silly lockFile 49b57bea-loadash loadash@
+29 silly lockFile 49b57bea-loadash loadash@
+30 error 404 Not Found
+30 error 404
+30 error 404 'loadash' is not in the npm registry.
+30 error 404 You should bug the author to publish it
+30 error 404 It was specified as a dependency of 'electron-quick-start'
+30 error 404
+30 error 404 Note that you can also install from a
+30 error 404 tarball, folder, or http url, or git url.
+31 error System Windows_NT 10.0.10586
+32 error command "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "i" "loadash"
+33 error cwd C:\Users\Piyush Agade\Workspaces\Misc\Elektron\Restore\old repo\UniClip-Desktop
+34 error node -v v4.2.1
+35 error npm -v 1.4.28
+36 error code E404
+37 verbose exit [ 1, true ]
