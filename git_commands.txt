@@ -1,0 +1,11 @@
+git checkout -b gh-pages
+
+git pull
+
+git init
+git add .
+git commit -m "...."
+
+git remote add origin https://github.com/piyushagade/UniClip-Desktop.git
+
+git push -f origin gh-pages
