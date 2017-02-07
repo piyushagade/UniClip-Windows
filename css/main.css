@@ -117,6 +117,38 @@ input[type=checkbox]{
     transform: scale(1.04) translate(10px,0);
 }
 
+
+.button_anim_alt {
+  border:0;
+  height:42px;
+  outline:none;
+  border-radius:0;
+  padding:5px 20px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  background: #FFF;
+  color: #FF4081;
+  transition:color .50s ease, background .50s ease;
+  
+  -webkit-transition:all .3s ease-out;
+  -moz-transition:all .3s ease-out;
+  -ms-transition:all .3s ease-out;
+  -o-transition:all .3s ease-out;
+  transition:all .3s ease-out;
+}
+
+.button_anim_alt:hover {
+  outline:none;
+  font-size: 11px;
+  background: #FF4081;
+  color: #FFF;
+  	-ms-transform: scale(1.04) translate(10px,0); /* IE 9 */
+    -webkit-transform: scale(1.04) translate(10px,0); /* Safari */
+    transform: scale(1.04) translate(10px,0);
+}
+
 .hidden{
 	display: none;
 	

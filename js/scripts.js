@@ -20,6 +20,9 @@ $('#tip').fadeOut(0);
 //Listen for quit command from main process
 toQuit();
 
+//Listen for update notifications from main process
+updateAvailable();
+
 
 $('#ui_waiting').fadeIn(200);
 
@@ -54,10 +57,14 @@ function onNotAuthorized(){
 }
 	
 function onAuthorized(){
-  
+ 
+	$('#ui_waiting').fadeOut(0); 
 	
 	isAuthorized = true;
+	
 	showPopup("Authentication succeeded.");
+	
+	
 	$('#ui_login').fadeOut(0);
 	
 	setTimeout(function() {		
@@ -78,7 +85,7 @@ function onAuthorized(){
   		$('#tip').fadeIn(200);
   		$('#tip').text('Press Ctrl + Shift + U to hide UniClip. Press again to unhide.');
 	
-	}, 2600);
+	}, 500);
 }
 
 function showTip(){
@@ -107,17 +114,16 @@ function showTip(){
 }
 
 function showPopup(mess){
-	$('#ui_popup').fadeIn(800);
-	$('#popup_content').text(mess
-	);
+	$('#ui_popup').fadeIn(400);
+	$('#popup_content').text(mess);
 	
 	setTimeout(function() {		
-		$('#ui_popup').fadeOut(800);
-	}, 1600);
+		$('#ui_popup').fadeOut(200);
+	}, 1000);
 	
 	setTimeout(function() {		
 		$('#popup_content').text("");
-	}, 1800);
+	}, 1600);
 	
 }
 
@@ -130,9 +136,21 @@ function makeid()
     for(var i=0; i < 18; i++ )
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 	
-	//Start session, listen for mobile connection
 	const fb_module = require("firebase");
-	const fb_desktops = new Firebase("https://uniclip.firebaseio.com/desktops/");	
+	
+	// Initialize Firebase
+	var config = {
+		apiKey: "AIzaSyCgzKo7TzJxiltOpD5KH4iP0HU5zp43ev0",
+		authDomain: "uniclip-6004c.firebaseapp.com",
+		databaseURL: "https://uniclip-6004c.firebaseio.com",
+		storageBucket: "uniclip-6004c.appspot.com",
+		messagingSenderId: "753305641615"
+	};
+
+	firebase.initializeApp(config);
+	
+	var fb = firebase.database().ref();
+	var fb_desktops = firebase.database().ref().child("desktops");
 
 	var fb_desktop = fb_desktops.child(text);
 	fb_desktop.set("notset");
@@ -151,7 +169,9 @@ function makeid()
 	}, 200);
 	
 	//Manage Presence
-	var presenceDesktopRef = new Firebase("https://uniclip.firebaseio.com/desktops/" + text);
+<!--	var presenceDesktopRef = new Firebase("https://uniclipold.firebaseio.com/desktops/" + text);
+-->	
+	var presenceDesktopRef = firebase.database().ref().child("fb_desktops").child(text);
 	presenceDesktopRef.onDisconnect().remove();
 	
 	//On mobile connect listener
@@ -162,7 +182,9 @@ function makeid()
 		//Device connected
 		
 		//Add device to device list and make it online
-		const fb_cloudboard = new Firebase("https://uniclip.firebaseio.com/cloudboard/");	
+<!--		const fb_cloudboard = new Firebase("https://uniclipold.firebaseio.com/cloudboard/");
+-->		
+		var fb_cloudboard = firebase.database().ref().child("cloudboard");
 		fb_cloudboard.child(user_email).child("devices").child(text).set(2);
 
 
@@ -230,6 +252,7 @@ function hideAll(){
 	$('#ui_preferences').fadeOut(400);
 	$('#ui_about').fadeOut(400);
 	$('#ui_android').fadeOut(400);
+	$('#ui_update').fadeOut(400);
 }
 
 
@@ -347,7 +370,6 @@ $('#b_close_preferences').click(function (e) {
 
 $('#b_about').click(function (e) {
 	hideAll();
-	getPref();
 	
 	setTimeout(function() {	
 		$('#ui_about').fadeIn(400);
@@ -357,6 +379,25 @@ $('#b_about').click(function (e) {
 
 
 $('#b_close_about').click(function (e) {
+	hideAll();
+	setTimeout(function() {	
+		$('#ui_running').fadeIn(400);
+	}, 400);
+});
+
+
+
+$('#b_update').click(function (e) {
+	hideAll();
+	
+	setTimeout(function() {	
+		$('#ui_update').fadeIn(400);
+	}, 400);
+});
+
+
+
+$('#b_close_update').click(function (e) {
 	hideAll();
 	setTimeout(function() {	
 		$('#ui_running').fadeIn(400);
@@ -386,12 +427,16 @@ $('#b_close_android').click(function (e) {
 
 
 $('#b_unregister').click(function (e) {
+	 hideAll();
+	
 	logout();
 	$('#sync').fadeOut(600);
 });
 
 function logout(){
+	
 	setTimeout(function() {	
+	
      var ipcRenderer = require('electron').ipcRenderer;
 	 ipcRenderer.send('logout');
 	 
@@ -423,6 +468,25 @@ function toQuit(){
 	}, 600);
 }
 
+//Listen for update notifications from main process
+function updateAvailable(){
+	setTimeout(function() {	
+     var ipcRenderer = require('electron').ipcRenderer;
+	 ipcRenderer.send('updateAvailable');
+	 
+	 // Send IPC
+	 var remote = require('electron').remote;
+
+	 hideAll();
+	 ipcRenderer.on('updateAvailable', function(event, arg) {
+		if(arg === 1){
+			$('#b_update').removeClass('hidden');	
+		}
+	 });
+	
+	}, 600);
+}
+
 
 
 
@@ -445,6 +509,9 @@ function getPref(){
 			
 			if(arg[2] === true)$('#notifications').attr('checked', true);
 			else $('#notifications').attr('checked', false);
+			
+			if(arg[3] === true)$('#automatic_sync').attr('checked', true);
+			else $('#automatic_sync').attr('checked', false);
 		}
 	 });
 
@@ -465,10 +532,14 @@ function onPrefChange(){
 	if($('#notifications').is(':checked')) noti = true;
 	else noti = false;
 	
+	if($('#automatic_sync').is(':checked')) sync = true;
+	else sync = false;
+	
 	var remote = require('electron').remote;
     remote.getGlobal('prefObj').autostart = auto;
 	remote.getGlobal('prefObj').minimized = mini;	
 	remote.getGlobal('prefObj').notifications = noti;	
+	remote.getGlobal('prefObj').automatic_sync = sync;	
 	
 	var ipcRenderer = require('electron').ipcRenderer;
 	ipcRenderer.send('setPreferences');
@@ -480,7 +551,7 @@ function onPrefChange(){
 }
 
 function window_close(){
-	showPopup("Minimizing UniClip to tray.");
+	showPopup("Minimizing UniClip! to tray.");
 	setTimeout(function() {	
      var ipcRenderer = require('electron').ipcRenderer;
 	 ipcRenderer.send('closeWindow');
@@ -498,7 +569,7 @@ function window_close(){
 
 
 
-//Buttons onhover
+//Buttons onhover actions
 $('#close_window').mouseover(function() {
   $('#tip').fadeIn(400);
   $('#tip').text('Minimize UniClip!');

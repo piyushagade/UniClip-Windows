@@ -26,7 +26,10 @@
     "electron-prebuilt": "^0.37.8"
   },
   "dependencies": {
+    "@google-cloud/storage": "^0.7.0",
+    "electron-clipboard-watcher": "^1.0.1",
     "electron-json-storage": "^2.0.0",
+    "firebase": "^3.6.1",
     "lodash": "^4.12.0"
   }
 }

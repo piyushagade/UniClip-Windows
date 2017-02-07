@@ -1,11 +1,11 @@
-
+/*
 var update_available = false;
 
 $(window).load(function(){
 	
 
-	var fb_update = new Firebase("https://uniclip.firebaseio.com/latest_version");
-	var fb = new Firebase("https://uniclip.firebaseio.com/cloudboard/");
+	var fb_update = new Firebase("https://uniclipold.firebaseio.com/latest_version");
+	var fb = new Firebase("https://uniclipold.firebaseio.com/cloudboard/");
 	var fb_user = fb.child("piyushagade@gmailcom");
 	var fb_data = fb_user.child("data");
 	var fb_devices = fb_user.child("devices");
@@ -29,7 +29,7 @@ var options = [
   }
 ]
 
-/*//Notify if Update available
+//Notify if Update available
 fb_update.on("value", function(snapshot) {
   		var data = snapshot.val();
 		if(parseFloat(data)>parseFloat(version)) {
@@ -43,7 +43,7 @@ fb_update.on("value", function(snapshot) {
 		}, function (errorObject) {
   		console.log("The read failed: " + errorObject.code);
 		
-});*/
+});
 
 
 
@@ -89,7 +89,7 @@ fb_data.on("value", function(snapshot) {
 
 
 
-//	var remote = require('remote');     
+//	  var remote = require('remote');     
 //    var window = remote.getCurrentWindow();
 //    window.hide();
 
@@ -145,3 +145,4 @@ function doMinimizedNotify() {
 	alert();
         new Notification(options[2].title, options[2]);
 }
+*/
