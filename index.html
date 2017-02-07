@@ -285,7 +285,7 @@
     <!-- Custom Theme JavaScript -->
     <script src="assets/js/creative.js"></script>
     
-    <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
     
     
    <script type="text/javascript">
@@ -305,7 +305,21 @@
     
     <script type="text/javascript">
 		var count = null;
-		const fb_visitors = new Firebase("https://uniclipold.firebaseio.com/web_visitors");
+
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCgzKo7TzJxiltOpD5KH4iP0HU5zp43ev0",
+            authDomain: "uniclip-6004c.firebaseapp.com",
+            databaseURL: "https://uniclip-6004c.firebaseio.com",
+            storageBucket: "uniclip-6004c.appspot.com",
+            messagingSenderId: "753305641615"
+        };
+
+        firebase.initializeApp(config);
+
+
+        var fb_visitors = firebase.database().ref().child("web_visitors");
+
 		var k = 0;
 		
 		//Get visitor count  
